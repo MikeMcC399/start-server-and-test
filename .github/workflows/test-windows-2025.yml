@@ -1,0 +1,17 @@
+name: test-windows-2025
+on: workflow_dispatch
+jobs:
+  tests1:
+    runs-on: windows-2025
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v6
+
+      - name: Node version 🖨️
+        run: node -v
+
+      - name: npm install
+        run: npm ci
+
+      - name: Run demo 1 📊
+        run: npm run demo
