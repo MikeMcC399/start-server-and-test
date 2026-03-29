@@ -47,11 +47,11 @@ To execute all tests simply run `npm run ci`.
 
 ### Commands
 
-In addition to using NPM script names, you can pass entire commands (surround them with quotes so it is still a single string) that will be executed "as is". For example, to start globally installed `http-server` before running and recording [Cypress.io](https://www.cypress.io) tests you can use
+In addition to using NPM script names, you can pass entire commands (surround them with quotes so it is still a single string) that will be executed "as is". For example, to start globally installed `http-server` before running [Cypress.io](https://www.cypress.io) tests you can use:
 
 ```shell
-# run http-server, then when port 8000 responds run Cypress tests
-start-server-and-test 'http-server -c-1 --silent' 8000 './node_modules/.bin/cypress run --record'
+# run http-server, then when port 8080 responds run Cypress tests
+start-server-and-test 'http-server -c-1 --silent' 8080 'npx cypress run'
 ```
 
 Because `npm` scripts execute with `./node_modules/.bin` in the `$PATH`, you can mix global and locally installed tools when using commands inside `package.json` file. For example, if you want to run a single spec file:
@@ -59,7 +59,7 @@ Because `npm` scripts execute with `./node_modules/.bin` in the `$PATH`, you can
 ```json
 {
   "scripts": {
-    "ci": "start-server-and-test 'http-server -c-1 --silent' 8080 'cypress run --spec cypress/integration/location.spec.js'"
+    "ci": "start-server-and-test 'http-server -c-1 --silent' 8080 'cypress run --spec cypress/e2e/spec.cy.js'"
   }
 }
 ```
@@ -70,7 +70,7 @@ Or you can move `http-server` part into its own `start` script, which is used by
 {
   "scripts": {
     "start": "http-server -c-1 --silent",
-    "ci": "start-server-and-test 8080 'cypress run --spec cypress/integration/location.spec.js'"
+    "ci": "start-server-and-test 8080 'cypress run --spec cypress/e2e/spec.cy.js'"
   }
 }
 ```
@@ -206,14 +206,14 @@ Authentication is also supported, as well as custom protocol for the proxy (e.g.
 
 ## `npx` and `yarn`
 
-If you have [npx](https://www.npmjs.com/package/npx) available, you can execute locally installed tools from the shell. For example, if the `package.json` has the following local tools:
+You can execute locally installed tools from the shell. For example, if the `package.json` file has the following local tools:
 
 ```json
 {
   "devDependencies": {
-    "cypress": "3.2.0",
-    "http-server": "0.11.1",
-    "start-server-and-test": "1.9.0"
+    "cypress": "^15.13.0",
+    "http-server": "^14.1.1",
+    "start-server-and-test": "^3.0.0"
   }
 }
 ```
@@ -221,24 +221,22 @@ If you have [npx](https://www.npmjs.com/package/npx) available, you can execute 
 Then you can execute tests simply:
 
 ```text
-$ npx start-test 'http-server -c-1 .' 8080 'cypress run'
-starting server using command "http-server -c-1 ."
-and when url "http://127.0.0.1:8080" is responding
-running tests using command "cypress run"
-Starting up http-server, serving .
+$ npx start-test 'http-server -c-1 --silent' 8080 'npx cypress run'
+1: starting server using command "http-server -c-1 --silent"
+and when url "[ 'http://127.0.0.1:8080' ]" is responding with HTTP status code 200
+running tests using command "npx cypress run"
 ...
 ```
 
-Similarly, you can use [yarn](https://yarnpkg.com/en/) to call locally installed tools
+Similarly, you can use [yarn](https://classic.yarnpkg.com/) to call locally installed tools:
 
 ```text
-$ yarn start-test 'http-server -c-1 .' 8080 'cypress run'
-yarn run v1.13.0
-$ /private/tmp/test-t/node_modules/.bin/start-test 'http-server -c-1 .' 8080 'cypress run'
-starting server using command "http-server -c-1 ."
-and when url "http://127.0.0.1:8080" is responding
+$ yarn start-test 'http-server -c-1 --silent' 8080 'cypress run'
+yarn run v1.22.22
+$ /tmp/project/node_modules/.bin/start-test 'http-server -c-1 --silent' 8080 'cypress run'
+1: starting server using command "http-server -c-1 --silent"
+and when url "[ 'http://127.0.0.1:8080' ]" is responding with HTTP status code 200
 running tests using command "cypress run"
-Starting up http-server, serving .
 ...
 ```
 
